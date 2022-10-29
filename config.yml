@@ -1,0 +1,11 @@
+appname: Multithreading-app
+logLevel: debug
+
+db:
+  dialect: sqlite
+  driver: pysqlite
+  host: localhost
+  port: 10000
+  name: blog
+  username: test
+  password: test
