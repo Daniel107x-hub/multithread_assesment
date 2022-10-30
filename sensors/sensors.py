@@ -1,3 +1,5 @@
+import threading
+
 from utils.network import Network
 from random import randint
 from service.model.message import Message
@@ -34,6 +36,7 @@ class BaseSensor:
         self._delay = delay
         self._network = network
         self._value = 0
+        self.is_running = False
 
     def read_value(self) -> None:
         reading = randint(MIN_VALUE, MAX_VALUE)
@@ -43,12 +46,17 @@ class BaseSensor:
         self._network.publish(message)
 
     def run(self):
-        while True:
-            self.read_value()
-            message = Message(sensor_name=self.name, value=self._value)
-            print(f"Publishing message: {message}")
-            self.publish(message)
-            sleep(self._delay)
+        self.is_running = True
+        try:
+            while self.is_running:
+                self.read_value()
+                message = Message(sensor_name=self.name, value=self._value)
+                print(f"Publishing message: {message}")
+                self.publish(message)
+                sleep(self._delay)
+            print(f"Stopping sensor {self.name}...")
+        finally:
+            print(f"Stopped sensor: {self.name}")
 
 
 class TemperatureSensor(BaseSensor):
