@@ -1,5 +1,6 @@
 import queue
 import sys
+import logging
 
 from sensors.sensor_factory import BuildingSensorFactory, NatureSensorFactory
 from sensors.sensors import SensorType
@@ -7,6 +8,8 @@ from utils.network import Network
 from service.database_service import DatabaseService
 from service.repository.repository import Repository
 from logger.logger import Logger
+
+logging.basicConfig(level=logging.INFO)
 
 
 if __name__ == "__main__":
@@ -51,6 +54,7 @@ if __name__ == "__main__":
         while True:
             pass
     except KeyboardInterrupt as e:
+        logging.info("Finishing program execution...")
         # Stop sensors
         for sensor in sensors:
             sensor.is_running = False
@@ -59,10 +63,11 @@ if __name__ == "__main__":
             for sensor in sensors:
                 sensor.join(0.2)
                 if sensor.is_alive():
-                    print("Sensor thread not ready to join...")
+                    logging.debug("Sensor thread not ready to join...")
                 else:
-                    print("Sensor thread successfully joined")
+                    logging.debug("Sensor successfully joined.")
                     sensors.remove(sensor)
+        logging.info("Successfully stopped all sensors")
 
         # Stop consumers
         network.publish(None)
@@ -70,9 +75,10 @@ if __name__ == "__main__":
             for consumer in consumers:
                 consumer.join(0.2)
                 if consumer.is_alive():
-                    print("Consumer not ready to join...")
+                    logging.debug("Consumer not ready to join...")
                 else:
-                    print("Consumer successfully joined")
+                    logging.debug("Consumer successfully joined.")
                     consumers.remove(consumer)
-        print("Program finished")
+        logging.info("Successfully stopped all consumers")
+        logging.info("Program finished.")
         sys.exit(e)

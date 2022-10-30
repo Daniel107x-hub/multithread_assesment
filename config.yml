@@ -1,6 +1,4 @@
 appname: Multithreading-app
-logLevel: debug
-
 db:
   dialect: sqlite
   driver: pysqlite

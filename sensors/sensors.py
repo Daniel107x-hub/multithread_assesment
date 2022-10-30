@@ -1,4 +1,5 @@
 import threading
+import logging
 
 from utils.network import Network
 from random import randint
@@ -52,12 +53,12 @@ class BaseSensor(threading.Thread):
             while self.is_running:
                 self.read_value()
                 message = Message(sensor_name=self.name, value=self._value)
-                print(f"Publishing message: {message}")
+                logging.info(f"Publishing message: {message}")
                 self.publish(message)
                 sleep(self._delay)
-            print(f"Stopping sensor {self.name}...")
+            logging.debug(f"Stopping sensor {self.name}...")
         finally:
-            print(f"Stopped sensor: {self.name}")
+            logging.debug(f"Stopped sensor: {self.name}")
 
 
 class TemperatureSensor(BaseSensor):

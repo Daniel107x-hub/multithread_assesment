@@ -1,4 +1,5 @@
 import threading
+import logging
 
 from service.repository.repository import Repository
 from utils.network import Network
@@ -12,15 +13,14 @@ class Logger(threading.Thread):
         self.id = id
 
     def run(self) -> None:
-        print(f"Starting consumer: {self.id}")
         try:
             while True:
                 message = self.network.consume()
                 if message is None:
                     self.network.publish(None)
                     break
-                print(f"Consumer {self.id} got message: {message}")
+                logging.info(f"Consumer {self.id} got message: {message}")
                 self.repository.save(message)
-            print(f"Stopping consumer {self.id}")
+            logging.debug(f"Stopping consumer {self.id}")
         finally:
-            print(f"Stopped consumer {self.id}")
+            logging.debug(f"Stopped consumer {self.id}")
