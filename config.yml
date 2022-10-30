@@ -4,6 +4,6 @@ db:
   driver: pysqlite
   host: localhost
   port: 10000
-  name: blog
+  name: test
   username: test
   password: test
