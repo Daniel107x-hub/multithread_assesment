@@ -1,5 +1,13 @@
 from abc import abstractmethod
-from .sensors import BaseSensor, TemperatureSensor, HeatSensor, WaterSensor, HumiditySensor, SmokeSensor, SensorType
+from .sensors import (
+    BaseSensor,
+    TemperatureSensor,
+    HeatSensor,
+    WaterSensor,
+    HumiditySensor,
+    SmokeSensor,
+    SensorType,
+)
 from utils.network import Network
 
 

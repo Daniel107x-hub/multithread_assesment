@@ -11,5 +11,3 @@ class Repository:
 
     def save(self, message: Message) -> None:
         self._db.save(message)
-
-

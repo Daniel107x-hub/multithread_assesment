@@ -1,5 +1,3 @@
-import threading
-
 from utils.network import Network
 from random import randint
 from service.model.message import Message
@@ -61,7 +59,9 @@ class BaseSensor:
 
 class TemperatureSensor(BaseSensor):
     def __init__(self, name: str, network: Network):
-        super().__init__(TEMPERATURE_SENSOR_PREFIX + name, TEMPERATURE_SENSOR_DELAY, network)
+        super().__init__(
+            TEMPERATURE_SENSOR_PREFIX + name, TEMPERATURE_SENSOR_DELAY, network
+        )
 
 
 class HeatSensor(BaseSensor):
@@ -82,4 +82,3 @@ class HumiditySensor(BaseSensor):
 class SmokeSensor(BaseSensor):
     def __init__(self, name: str, network: Network):
         super().__init__(SMOKE_SENSOR_PREFIX + name, SMOKE_SENSOR_DELAY, network)
-        

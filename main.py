@@ -10,7 +10,7 @@ from service.repository.repository import Repository
 from logger.logger import Logger
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     # Set up repository
     db = DatabaseService()
     repository = Repository(db)
@@ -31,7 +31,13 @@ if __name__ == '__main__':
     sensors.append(nature_sensor_factory.create("sensor_5", SensorType.HUMIDITY))
 
     # Setting up consumers
-    consumers = [Logger(repository, network, 1), Logger(repository, network, 2), Logger(repository, network, 3), Logger(repository, network, 4), Logger(repository, network, 5)]
+    consumers = [
+        Logger(repository, network, 1),
+        Logger(repository, network, 2),
+        Logger(repository, network, 3),
+        Logger(repository, network, 4),
+        Logger(repository, network, 5),
+    ]
     for consumer in consumers:
         consumer.start()
 
