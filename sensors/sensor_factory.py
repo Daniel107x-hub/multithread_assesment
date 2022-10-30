@@ -4,8 +4,8 @@ from utils.network import Network
 
 
 class SensorFactory:
-    def __init__(self):
-        self._network = Network()
+    def __init__(self, network: Network):
+        self._network = network
 
     @abstractmethod
     def create(self, name: str, sensor_type: SensorType) -> BaseSensor:
