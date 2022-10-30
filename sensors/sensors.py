@@ -1,3 +1,5 @@
+import threading
+
 from utils.network import Network
 from random import randint
 from service.model.message import Message
@@ -28,8 +30,9 @@ class SensorType(Enum):
     SMOKE = "smoke"
 
 
-class BaseSensor:
+class BaseSensor(threading.Thread):
     def __init__(self, name: str, delay: int, network: Network):
+        super().__init__()
         self.name = name
         self._delay = delay
         self._network = network

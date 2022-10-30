@@ -1,6 +1,5 @@
 import queue
 import sys
-import threading
 
 from sensors.sensor_factory import BuildingSensorFactory, NatureSensorFactory
 from sensors.sensors import SensorType
@@ -21,14 +20,15 @@ if __name__ == "__main__":
     network = Network(buffer)
 
     # Creating sensors
-    sensors = []
     building_sensor_factory = BuildingSensorFactory(network)
     nature_sensor_factory = NatureSensorFactory(network)
-    sensors.append(building_sensor_factory.create("sensor_1", SensorType.SMOKE))
-    sensors.append(building_sensor_factory.create("sensor_2", SensorType.HEAT))
-    sensors.append(building_sensor_factory.create("sensor_3", SensorType.TEMPERATURE))
-    sensors.append(nature_sensor_factory.create("sensor_4", SensorType.WATER))
-    sensors.append(nature_sensor_factory.create("sensor_5", SensorType.HUMIDITY))
+    sensors = [
+        building_sensor_factory.create("sensor_1", SensorType.SMOKE),
+        building_sensor_factory.create("sensor_2", SensorType.HEAT),
+        building_sensor_factory.create("sensor_3", SensorType.TEMPERATURE),
+        nature_sensor_factory.create("sensor_4", SensorType.WATER),
+        nature_sensor_factory.create("sensor_5", SensorType.HUMIDITY),
+    ]
 
     # Setting up consumers
     consumers = [
@@ -38,30 +38,32 @@ if __name__ == "__main__":
         Logger(repository, network, 4),
         Logger(repository, network, 5),
     ]
+
+    # Starting sensors and consumers
     for consumer in consumers:
         consumer.start()
 
-    # Running sensor tasks
-    threads = []
     for sensor in sensors:
-        thread = threading.Thread(target=sensor.run)
-        threads.append(thread)
-        thread.start()
+        sensor.start()
+
+    # Main loop
     try:
         while True:
             pass
     except KeyboardInterrupt as e:
+        # Stop sensors
         for sensor in sensors:
             sensor.is_running = False
 
-        while threads:
-            for thread in threads:
-                thread.join(0.2)
-                if thread.is_alive():
-                    print("Thread not ready to join...")
+        while sensors:
+            for sensor in sensors:
+                sensor.join(0.2)
+                if sensor.is_alive():
+                    print("Sensor thread not ready to join...")
                 else:
-                    print("Thread successfully joined")
-                    threads.remove(thread)
+                    print("Sensor thread successfully joined")
+                    sensors.remove(sensor)
+
         # Stop consumers
         network.publish(None)
         while consumers:
@@ -72,6 +74,5 @@ if __name__ == "__main__":
                 else:
                     print("Consumer successfully joined")
                     consumers.remove(consumer)
-
-        print("Program stopped")
+        print("Program finished")
         sys.exit(e)
