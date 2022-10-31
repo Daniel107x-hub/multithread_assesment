@@ -6,11 +6,11 @@ Create an application that simulates sensors logging info to a persistent dataso
 <br>With the following restraints:
 - Simulate the interaction between sensors and network, the network should have a limit of 5 messages maximum at once.
 - Use multithreading, create 5 sensors that should be registering to the log service. All five sensors should work 
-simultaneously without blocking each other and use same network restrains.
+simultaneously without blocking each other and use same network restraints.
 - Sensors should log every 5 seconds, and a timestamp should persist onto datasource.
-- Sensors most generate the following info, timestamp, sensor name, value (integer between -100 and 100).
-- Model, most define all properties needed to persist data into datasource.
-- Model most have a timestamp type, id, sensor name, value.
+- Sensors must generate the following info, timestamp, sensor name, value (integer between -100 and 100).
+- Model, must define all properties needed to persist data into datasource.
+- Model must have a timestamp type, id, sensor name, value.
 - Repository class should contain all logic needed to use a file/memory database, and convert logic for model to allow 
 insertion into database.
 - Use PEP8 conventions for coding.

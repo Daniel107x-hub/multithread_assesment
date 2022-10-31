@@ -1,0 +1,9 @@
+appname: Multithreading-app
+db:
+  dialect: sqlite
+  driver: pysqlite
+  host: localhost
+  port: 10000
+  name: test
+  username: test
+  password: test
