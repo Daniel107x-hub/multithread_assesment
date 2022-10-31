@@ -60,13 +60,7 @@ if __name__ == "__main__":
     ]
 
     # Setting up consumers
-    consumers = [
-        Logger(repository, network, 1),
-        Logger(repository, network, 2),
-        Logger(repository, network, 3),
-        Logger(repository, network, 4),
-        Logger(repository, network, 5),
-    ]
+    consumers = [Logger(repository, network, i) for i in range(0, 5)]
 
     # Starting sensors and consumers
     for consumer in consumers:
