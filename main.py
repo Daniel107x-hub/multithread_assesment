@@ -12,6 +12,32 @@ from logger.logger import Logger
 logging.basicConfig(level=logging.INFO)
 
 
+def stop_sensors(sensors_list: list):
+    for sensor in sensors_list:
+        sensor.is_running = False
+    while sensors_list:
+        for sensor in sensors_list:
+            sensor.join(0.2)
+            if sensor.is_alive():
+                logging.debug("Sensor not ready to join...")
+            else:
+                logging.debug("Sensor successfully joined.")
+                sensors_list.remove(sensor)
+    logging.info("Successfully stopped all sensors")
+
+
+def stop_loggers(loggers_list: list):
+    while loggers_list:
+        for logger in loggers_list:
+            logger.join(0.2)
+            if logger.is_alive():
+                logging.debug("Logger not ready to join...")
+            else:
+                logging.debug("Logger successfully joined.")
+                loggers_list.remove(logger)
+    logging.info("Successfully stopped all loggers")
+
+
 if __name__ == "__main__":
     # Set up repository
     db = DatabaseService()
@@ -55,30 +81,8 @@ if __name__ == "__main__":
             pass
     except KeyboardInterrupt as e:
         logging.info("Finishing program execution...")
-        # Stop sensors
-        for sensor in sensors:
-            sensor.is_running = False
-
-        while sensors:
-            for sensor in sensors:
-                sensor.join(0.2)
-                if sensor.is_alive():
-                    logging.debug("Sensor thread not ready to join...")
-                else:
-                    logging.debug("Sensor successfully joined.")
-                    sensors.remove(sensor)
-        logging.info("Successfully stopped all sensors")
-
-        # Stop consumers
+        stop_sensors(sensors)
         network.publish(None)
-        while consumers:
-            for consumer in consumers:
-                consumer.join(0.2)
-                if consumer.is_alive():
-                    logging.debug("Consumer not ready to join...")
-                else:
-                    logging.debug("Consumer successfully joined.")
-                    consumers.remove(consumer)
-        logging.info("Successfully stopped all consumers")
+        stop_loggers(consumers)
         logging.info("Program finished.")
         sys.exit(e)
